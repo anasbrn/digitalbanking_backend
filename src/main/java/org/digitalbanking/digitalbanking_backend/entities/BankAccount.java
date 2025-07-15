@@ -4,15 +4,19 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.digitalbanking.digitalbanking_backend.enums.AccountStatus;
 
 import java.util.Date;
 import java.util.List;
 
-@DiscriminatorColumn(name = "type", length = 4)
+@DiscriminatorColumn(name = "type", length = 4, discriminatorType = DiscriminatorType.STRING)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@Entity @Data @NoArgsConstructor
+@Entity
+@Data
+@NoArgsConstructor
 @AllArgsConstructor
+@SuperBuilder
 public abstract class BankAccount {
     @Id
     private String id;

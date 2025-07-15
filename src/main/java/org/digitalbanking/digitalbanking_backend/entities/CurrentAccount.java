@@ -4,16 +4,15 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.digitalbanking.digitalbanking_backend.enums.AccountStatus;
-
-import java.sql.Date;
+import lombok.experimental.SuperBuilder;
 
 @DiscriminatorValue("CA")
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public abstract class CurrentAccount extends BankAccount {
+@SuperBuilder()
+public class CurrentAccount extends BankAccount {
     private double overDraft;
 }
 
