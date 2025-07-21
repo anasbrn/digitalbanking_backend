@@ -27,7 +27,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public CustomerDTO findCustomerById(String id) {
         Customer customer = customerRepository.findById(id).orElseThrow(
-                () -> new CustomerNotFoundException("Customer not found")
+                () -> new CustomerNotFoundException("Customer with id: " + id + " not found")
         );
         return customerMapper.toDto(customer);
     }

@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.digitalbanking.digitalbanking_backend.enums.AccountStatus;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.Date;
 import java.util.List;
@@ -30,7 +32,8 @@ public abstract class BankAccount {
     @ManyToOne
     private Customer customer;
 
-    @OneToMany(mappedBy = "bankAccount", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "bankAccount", cascade = CascadeType.REMOVE, orphanRemoval = true) // remove in JPA level
+    @OnDelete(action = OnDeleteAction.CASCADE) // remove in db level (this alone enough)
     private List<Operation> operations;
 }
 
