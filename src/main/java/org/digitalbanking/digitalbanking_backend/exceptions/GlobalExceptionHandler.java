@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(CustomerNotFoundException.class)
-    public ResponseEntity<ApiError> handleCustomerNotFoundException(CustomerNotFoundException ex) {
+    @ExceptionHandler({CustomerNotFoundException.class, BankAccountNotFound.class})
+    public ResponseEntity<ApiError> handleCustomerNotFoundException(RuntimeException ex) {
         ApiError apiError = new ApiError(
                 HttpStatus.NOT_FOUND.value(),
                 HttpStatus.NOT_FOUND.getReasonPhrase(),
