@@ -1,6 +1,7 @@
 package org.digitalbanking.digitalbanking_backend.services;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.digitalbanking.digitalbanking_backend.dtos.CustomerDTO;
 import org.digitalbanking.digitalbanking_backend.entities.Customer;
 import org.digitalbanking.digitalbanking_backend.exceptions.CustomerNotFoundException;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@Slf4j
 @AllArgsConstructor
 @Service
 public class CustomerServiceImpl implements CustomerService {
@@ -35,6 +37,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public CustomerDTO saveCustomer(CustomerDTO customerDto) {
         customerDto.setId(UUID.randomUUID().toString());
+        log.info("Saving customer {}", customerDto);
         Customer customer = customerMapper.toEntity(customerDto);
         Customer savedCustomer = customerRepository.save(customer);
         return customerMapper.toDto(savedCustomer);
@@ -45,6 +48,7 @@ public class CustomerServiceImpl implements CustomerService {
         Customer customer = customerRepository.findById(id).orElseThrow(
                 () -> new CustomerNotFoundException("Customer with id: " + id + " not found")
         );
+        log.info("Deleting customer by id success {}", id);
         customerRepository.delete(customer);
     }
 }

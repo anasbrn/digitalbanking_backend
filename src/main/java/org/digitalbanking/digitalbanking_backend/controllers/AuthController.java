@@ -1,5 +1,6 @@
 package org.digitalbanking.digitalbanking_backend.controllers;
 
+import lombok.extern.slf4j.Slf4j;
 import org.digitalbanking.digitalbanking_backend.entities.auth.LoginRequest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,6 +18,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 
+@Slf4j
 @RestController
 public class AuthController {
     private final AuthenticationManager authenticationManager;
@@ -35,6 +37,7 @@ public class AuthController {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(username, password)
         );
+        log.info("Authentication Success: {}", authentication.getPrincipal());
         Instant instant = Instant.now();
         String scope = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(" "));
         JwtClaimsSet jwtClaimsSet = JwtClaimsSet
