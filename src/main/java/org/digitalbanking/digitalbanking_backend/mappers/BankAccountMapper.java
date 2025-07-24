@@ -1,5 +1,6 @@
 package org.digitalbanking.digitalbanking_backend.mappers;
 
+import lombok.AllArgsConstructor;
 import org.digitalbanking.digitalbanking_backend.dtos.BankAccountDTO;
 import org.digitalbanking.digitalbanking_backend.dtos.CurrentAccountDTO;
 import org.digitalbanking.digitalbanking_backend.dtos.SavingAccountDTO;
@@ -8,8 +9,11 @@ import org.digitalbanking.digitalbanking_backend.entities.CurrentAccount;
 import org.digitalbanking.digitalbanking_backend.entities.SavingAccount;
 import org.springframework.stereotype.Service;
 
+@AllArgsConstructor
 @Service
 public class BankAccountMapper {
+    private final CustomerMapper customerMapper;
+
     public BankAccountDTO toDto(BankAccount bankAccount) {
         if (bankAccount instanceof CurrentAccount) {
             return toCurrentAccountDto((CurrentAccount) bankAccount);
@@ -42,6 +46,6 @@ public class BankAccountMapper {
         dto.setCurrency(account.getCurrency());
         dto.setStatus(account.getStatus());
         dto.setCreatedAt(account.getCreatedAt());
-        dto.setCustomer(dto.getCustomer());
+        dto.setCustomer(customerMapper.toDto(account.getCustomer()));
     }
 }
