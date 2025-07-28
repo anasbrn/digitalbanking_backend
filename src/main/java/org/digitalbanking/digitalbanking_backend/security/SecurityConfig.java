@@ -52,9 +52,11 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
 //                .httpBasic(Customizer.withDefaults())
-                .oauth2ResourceServer(oa->oa.jwt(Customizer.withDefaults()))
-                .authorizeHttpRequests(ar->ar.requestMatchers("/auth/**").permitAll())
-                .authorizeHttpRequests(ar -> ar.anyRequest().authenticated())
+                .oauth2ResourceServer(oa -> oa.jwt(Customizer.withDefaults()))
+                .authorizeHttpRequests(
+                        ar -> ar.requestMatchers("/auth/**").permitAll()
+                                .requestMatchers("/swagger-ui/**", "/webjars/**", "swagger-resources/**", "v3/api-docs/**").permitAll()
+                                .anyRequest().authenticated())
                 .build();
     }
 

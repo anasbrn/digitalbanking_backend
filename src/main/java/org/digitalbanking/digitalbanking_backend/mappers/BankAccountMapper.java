@@ -7,6 +7,7 @@ import org.digitalbanking.digitalbanking_backend.dtos.SavingAccountDTO;
 import org.digitalbanking.digitalbanking_backend.entities.BankAccount;
 import org.digitalbanking.digitalbanking_backend.entities.CurrentAccount;
 import org.digitalbanking.digitalbanking_backend.entities.SavingAccount;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 @AllArgsConstructor
@@ -24,28 +25,49 @@ public class BankAccountMapper {
         }
     }
 
-    private CurrentAccountDTO toCurrentAccountDto(CurrentAccount currentAccount) {
+    public CurrentAccountDTO toCurrentAccountDto(CurrentAccount currentAccount) {
         if (currentAccount == null) return null;
         CurrentAccountDTO currentAccountDTO = new CurrentAccountDTO();
-        mapCommonFields(currentAccountDTO, currentAccount);
-        currentAccountDTO.setOverDraft(currentAccountDTO.getOverDraft());
+        BeanUtils.copyProperties(currentAccount, currentAccountDTO);
+        currentAccountDTO.setCustomer(this.customerMapper.toDto(currentAccount.getCustomer()));
+        currentAccountDTO.setType(currentAccount.getClass().getSimpleName());
+        currentAccountDTO.setOverDraft(currentAccount.getOverDraft());
         return currentAccountDTO;
     }
 
-    private SavingAccountDTO toSavingAccountDto(SavingAccount savingAccount) {
+    public SavingAccountDTO toSavingAccountDto(SavingAccount savingAccount) {
         if (savingAccount == null) return null;
         SavingAccountDTO savingAccountDTO = new SavingAccountDTO();
-        mapCommonFields(savingAccountDTO, savingAccount);
+        BeanUtils.copyProperties(savingAccount, savingAccountDTO);
+        savingAccountDTO.setCustomer(this.customerMapper.toDto(savingAccount.getCustomer()));
+        savingAccountDTO.setType(savingAccount.getClass().getSimpleName());
         savingAccountDTO.setInterestRate(savingAccount.getInterestRate());
         return savingAccountDTO;
     }
 
-    private void mapCommonFields(BankAccountDTO dto, BankAccount account) {
-        dto.setId(account.getId());
-        dto.setBalance(account.getBalance());
-        dto.setCurrency(account.getCurrency());
-        dto.setStatus(account.getStatus());
-        dto.setCreatedAt(account.getCreatedAt());
-        dto.setCustomer(customerMapper.toDto(account.getCustomer()));
-    }
+//    public BankAccount toEntity(BankAccountDTO bankAccountDTO) {
+//        if (bankAccountDTO instanceof CurrentAccountDTO) {
+//            return toCurrentAccountEntity((CurrentAccountDTO) bankAccountDTO);
+//        } else if (bankAccountDTO instanceof SavingAccountDTO) {
+//            return toSavingAccountEntity((SavingAccountDTO) bankAccountDTO);
+//        } else {
+//            throw new IllegalArgumentException("Bank account dto type not supported, " + bankAccountDTO.getClass().getName());
+//        }
+//    }
+
+//    public CurrentAccount toCurrentAccountEntity(CurrentAccountDTO currentAccountDTO) {
+//        if (currentAccountDTO == null) return null;
+//        CurrentAccount currentAccount = new CurrentAccount();
+//        mapCommonFieldsEntity(currentAccount, currentAccountDTO);
+//        currentAccount.setOverDraft(currentAccountDTO.getOverDraft());
+//        return currentAccount;
+//    }
+//
+//    public SavingAccount toSavingAccountEntity(SavingAccountDTO savingAccountDTO) {
+//        if (savingAccountDTO == null) return null;
+//        SavingAccount savingAccount = new SavingAccount();
+//        mapCommonFieldsEntity(savingAccount, savingAccountDTO);
+//        savingAccount.setInterestRate(savingAccountDTO.getInterestRate());
+//        return savingAccount;
+//    }
 }

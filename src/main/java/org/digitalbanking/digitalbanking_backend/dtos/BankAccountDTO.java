@@ -12,6 +12,7 @@ public abstract class BankAccountDTO {
     private Date createdAt;
     private double balance;
     private String currency;
+    private String type;
     private AccountStatus status;
     private CustomerDTO customer;
 }
