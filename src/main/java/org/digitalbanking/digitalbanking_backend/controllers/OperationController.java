@@ -19,9 +19,10 @@ public class OperationController {
     @GetMapping("/bankAccount/{id}")
     public Page<OperationDTO> findBankAccountById(
             @PathVariable(name = "id") String bankAccountId,
-            @RequestParam(defaultValue = "0") int page
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size
     ) {
-        Pageable pageable = PageRequest.of(page, 2);
+        Pageable pageable = PageRequest.of(page, size);
         return operationServiceImpl.findByBankAccountId(bankAccountId, pageable);
     }
 }

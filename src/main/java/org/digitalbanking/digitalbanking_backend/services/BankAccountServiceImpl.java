@@ -2,20 +2,20 @@ package org.digitalbanking.digitalbanking_backend.services;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.digitalbanking.digitalbanking_backend.dtos.BankAccountDTO;
-import org.digitalbanking.digitalbanking_backend.dtos.CurrentAccountDTO;
-import org.digitalbanking.digitalbanking_backend.dtos.CustomerDTO;
-import org.digitalbanking.digitalbanking_backend.dtos.SavingAccountDTO;
+import org.digitalbanking.digitalbanking_backend.dtos.*;
 import org.digitalbanking.digitalbanking_backend.entities.BankAccount;
 import org.digitalbanking.digitalbanking_backend.entities.CurrentAccount;
 import org.digitalbanking.digitalbanking_backend.entities.Customer;
 import org.digitalbanking.digitalbanking_backend.entities.SavingAccount;
 import org.digitalbanking.digitalbanking_backend.enums.AccountStatus;
 import org.digitalbanking.digitalbanking_backend.exceptions.BankAccountNotFound;
+import org.digitalbanking.digitalbanking_backend.mappers.AccountOperationHistoryMapper;
 import org.digitalbanking.digitalbanking_backend.mappers.BankAccountMapper;
 import org.digitalbanking.digitalbanking_backend.mappers.CustomerMapper;
 import org.digitalbanking.digitalbanking_backend.repositories.BankAccountRepository;
 import org.digitalbanking.digitalbanking_backend.requests.BankAccountRequest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -29,6 +29,8 @@ public class BankAccountServiceImpl implements BankAccountService {
     private final BankAccountMapper bankAccountMapper;
     private final CustomerServiceImpl customerServiceImpl;
     private final CustomerMapper customerMapper;
+    private final OperationServiceImpl operationServiceImpl;
+    private final AccountOperationHistoryMapper accountOperationHistoryMapper;
 
     @Override
     public BankAccountDTO findById(String id) {
@@ -37,6 +39,17 @@ public class BankAccountServiceImpl implements BankAccountService {
         );
         log.info("Bank Account with id: " + id + " found");
         return bankAccountMapper.toDto(bankAccount);
+    }
+
+    @Override
+    public AccountOperationHistoryDTO findById(String id, Pageable pageable) {
+        BankAccount bankAccount = bankAccountRepository.findById(id).orElseThrow(
+                () -> new BankAccountNotFound("Account with id: " + id + " not found")
+        );
+        Page<OperationDTO> operationDTOS = operationServiceImpl.findByBankAccountId(id, pageable);
+        log.info("Getting bank account operations history");
+
+        return accountOperationHistoryMapper.toDto(bankAccount, operationDTOS, pageable.getPageNumber());
     }
 
     public BankAccountDTO saveBankAccount(BankAccountRequest request) {
