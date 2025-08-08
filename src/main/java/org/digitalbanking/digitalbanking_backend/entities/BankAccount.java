@@ -35,5 +35,19 @@ public abstract class BankAccount {
     @OneToMany(mappedBy = "bankAccount", cascade = CascadeType.REMOVE, orphanRemoval = true) // remove in JPA level
     @OnDelete(action = OnDeleteAction.CASCADE) // remove in db level (this alone enough)
     private List<Operation> operations;
+
+    public abstract boolean canWithdraw(double amount);
+
+    public boolean withdraw(double amount) {
+        if (canWithdraw(amount)) {
+            balance -= amount;
+            return true;
+        }
+        return false;
+    }
+
+    public void credit(double amount) {
+        balance += amount;
+    }
 }
 

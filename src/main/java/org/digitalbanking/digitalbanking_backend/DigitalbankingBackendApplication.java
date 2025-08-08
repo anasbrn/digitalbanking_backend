@@ -74,7 +74,7 @@ public class DigitalbankingBackendApplication {
                         .builder()
                         .date(new Date())
                         .amount(3000)
-                        .type(Math.random() > 0.5 ? OperationType.CREDIT : OperationType.DEBIT)
+                        .type(Math.random() > 0.5 ? OperationType.CREDIT : OperationType.WITHDRAW)
                         .bankAccount(bankAccount)
                         .build();
 

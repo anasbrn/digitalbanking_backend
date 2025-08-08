@@ -14,5 +14,10 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder()
 public class CurrentAccount extends BankAccount {
     private double overDraft;
+
+    @Override
+    public boolean canWithdraw(double amount) {
+        return amount <= this.getBalance() + overDraft;
+    }
 }
 

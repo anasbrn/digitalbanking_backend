@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -20,6 +19,11 @@ public class GlobalExceptionHandler {
                 ex.getMessage()
         );
         return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(SoldInsufficientException.class)
+    public ResponseEntity<ApiError> handleInsufficientSold(RuntimeException ex) {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
@@ -52,5 +56,10 @@ public class GlobalExceptionHandler {
                 "errors", errors,
                 "message", "Validation failed"
         ), HttpStatus.BAD_REQUEST);
+    }
+
+    private ResponseEntity<ApiError> buildErrorResponse(HttpStatus status, String message) {
+        ApiError apiError = new ApiError(status.value(), status.getReasonPhrase(), message);
+        return ResponseEntity.status(status).body(apiError);
     }
 }
