@@ -40,6 +40,6 @@ public class OperationController {
 
     @PostMapping("/transfer")
     public void transfer(@RequestBody @Valid TransferOperationRequest request) {
-        operationServiceImpl.transfer(request.getSenderBankAccountId(), request.getRecipientBankAccountId(), request.getAmount());
+        operationServiceImpl.transfer(request.getBankAccountId(), request.getRecipientBankAccountId(), request.getAmount());
     }
 }

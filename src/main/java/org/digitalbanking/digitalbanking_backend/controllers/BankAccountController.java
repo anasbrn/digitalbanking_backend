@@ -21,6 +21,11 @@ import java.util.List;
 public class BankAccountController {
     private final BankAccountServiceImpl bankAccountServiceImpl;
 
+    @GetMapping("")
+    public List<BankAccountDTO> findAllBankAccounts() {
+        return bankAccountServiceImpl.findAll();
+    }
+
     @GetMapping("/{id}/operations/history")
     public AccountOperationHistoryDTO findBankAccountById(
             @PathVariable(name = "id") String id,

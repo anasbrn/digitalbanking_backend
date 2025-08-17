@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class TransferOperationRequest {
     @NotNull(message = "Sender Bank Account Id is required")
-    String senderBankAccountId;
+    String bankAccountId;
     @NotNull(message = "Recipient Bank Account Id is required")
     String recipientBankAccountId;
     @NotNull(message = "Amount is required")

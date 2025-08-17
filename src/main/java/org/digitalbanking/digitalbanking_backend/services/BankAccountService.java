@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 interface BankAccountService {
+    List<BankAccountDTO> findAll();
+
     BankAccountDTO findById(String id);
 
     AccountOperationHistoryDTO findById(String id, Pageable pageable);

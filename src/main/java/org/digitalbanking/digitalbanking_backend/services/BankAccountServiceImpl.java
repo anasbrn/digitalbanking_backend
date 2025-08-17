@@ -35,6 +35,12 @@ public class BankAccountServiceImpl implements BankAccountService {
     private final AccountOperationHistoryMapper accountOperationHistoryMapper;
 
     @Override
+    public List<BankAccountDTO> findAll() {
+        List<BankAccount> bankAccounts = bankAccountRepository.findAll();
+        return bankAccounts.stream().map(bankAccountMapper::toDto).toList();
+    }
+
+    @Override
     public BankAccountDTO findById(String id) {
         BankAccount bankAccount = bankAccountRepository.findById(id).orElseThrow(
                 () -> new BankAccountNotFound("Account with id: " + id + " not found")

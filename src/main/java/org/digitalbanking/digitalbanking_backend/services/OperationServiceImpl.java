@@ -79,9 +79,9 @@ public class OperationServiceImpl implements OperationService {
     }
 
     @Override
-    public void transfer(String senderBankAccountId, String recipientBankAccountId, double amount) {
-        BankAccount senderBankAccount = bankAccountRepository.findById(senderBankAccountId).orElseThrow(
-                () -> new BankAccountNotFound("Sender Bank Account with id: " + senderBankAccountId + " not found")
+    public void transfer(String bankAccountId, String recipientBankAccountId, double amount) {
+        BankAccount senderBankAccount = bankAccountRepository.findById(bankAccountId).orElseThrow(
+                () -> new BankAccountNotFound("Sender Bank Account with id: " + bankAccountId + " not found")
         );
 
         if (amount <= 0) {
@@ -90,7 +90,7 @@ public class OperationServiceImpl implements OperationService {
         boolean senderWithdrawSuccess = senderBankAccount.withdraw(amount);
         if (senderWithdrawSuccess) {
             BankAccount recipientBankAccount = bankAccountRepository.findById(recipientBankAccountId).orElseThrow(
-                    () -> new BankAccountNotFound("Recipient Bank Account with id: " + senderBankAccountId + " not found")
+                    () -> new BankAccountNotFound("Recipient Bank Account with id: " + bankAccountId + " not found")
             );
             recipientBankAccount.credit(amount);
             bankAccountRepository.save(senderBankAccount);
@@ -108,14 +108,14 @@ public class OperationServiceImpl implements OperationService {
                     .builder()
                     .date(new Date())
                     .amount(amount)
-                    .description("Received " + amount + " form bank account id: " + senderBankAccountId)
+                    .description("Received " + amount + " form bank account id: " + bankAccountId)
                     .type(OperationType.TRANSFER)
                     .bankAccount(recipientBankAccount)
                     .build();
             operationRepository.save(senderOperation);
             operationRepository.save(recipientOperation);
             log.info("Transfer to recipient sender " + recipientBankAccountId + " with operation with id: " + senderOperation.getId());
-            log.info("Transfer from sender " + senderBankAccountId + " with operation with id: " + recipientOperation.getId());
+            log.info("Transfer from sender " + bankAccountId + " with operation with id: " + recipientOperation.getId());
         } else {
             throw new SoldInsufficientException("Sold insufficient");
         }
