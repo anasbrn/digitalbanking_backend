@@ -19,7 +19,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -50,6 +52,12 @@ public class BankAccountServiceImpl implements BankAccountService {
         log.info("Getting bank account operations history");
 
         return accountOperationHistoryMapper.toDto(bankAccount, operationDTOS, pageable.getPageNumber());
+    }
+
+    @Override
+    public List<BankAccountDTO> findByCustomerId(String customerId, Pageable pageable) {
+        List<BankAccount> bankAccounts = bankAccountRepository.findByCustomerId(customerId, pageable);
+        return  bankAccounts.stream().map(bankAccountMapper::toDto).collect(Collectors.toList());
     }
 
     public BankAccountDTO saveBankAccount(BankAccountRequest request) {

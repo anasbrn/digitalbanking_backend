@@ -7,9 +7,13 @@ import org.digitalbanking.digitalbanking_backend.dtos.BankAccountDTO;
 import org.digitalbanking.digitalbanking_backend.requests.BankAccountRequest;
 import org.digitalbanking.digitalbanking_backend.services.BankAccountServiceImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/bankAccounts")
@@ -35,5 +39,13 @@ public class BankAccountController {
     public ResponseEntity<BankAccountDTO> saveBankAccount(@RequestBody @Valid BankAccountRequest request) {
         BankAccountDTO savedBankAccountDTO = bankAccountServiceImpl.saveBankAccount(request);
         return new ResponseEntity<>(savedBankAccountDTO, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/customer/{id}")
+    public List<BankAccountDTO> findByCustomer(
+            @PathVariable(name = "id") String id,
+            @PageableDefault(page = 0, size = 10) Pageable pageable
+    ) {
+        return bankAccountServiceImpl.findByCustomerId(id, pageable);
     }
 }
